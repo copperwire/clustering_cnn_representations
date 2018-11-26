@@ -54,7 +54,7 @@ model.add(MaxPool2D(pool_size=(2, 2)))
 
 model.add(Flatten())
 
-"""
+
 model.add(Dense(
         196,
         activation="relu",
@@ -63,7 +63,7 @@ model.add(Dense(
         bias_regularizer=reg.l2(0.01)
     )
     )
-"""
+
 model.add(Reshape((14, 14, 1)))
 
 model.add(Conv2DTranspose(
@@ -86,10 +86,6 @@ model.add(Conv2D(
         kernel_regularizer=reg.l2(0.01),
         bias_regularizer=reg.l2(0.01)
         ))
-
-print(model.output_shape)
-# %%
-
 
 model.compile(
         optimizer=opt.adam(lr=0.001, amsgrad=False),
@@ -116,7 +112,7 @@ model.fit(
     )
 
 # %%
-num_img = 11
+num_img = 25
 images = X_test[num_img:num_img+3]
 print(images.shape)
 
