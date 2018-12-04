@@ -72,15 +72,18 @@ import numpy as np
 def centroid_dist(sample):
     return np.array([np.linalg.norm(sample - c) for c in k_means.cluster_centers_])
 
-
 best_samp = None
 min = np.inf
 c_d_best = None
+# random_sample = tX_test[0].copy()
 random_sample = np.random.uniform(low=-3, high=1, size=(196,))
 
 best_pred = predict_model.predict(random_sample.reshape(1, 14, 14, 1), batch_size=1)
-plt.imshow(best_pred.reshape(28, 28))
 
+fig, ax = plt.subplots(nrows=2)
+
+ax[0].imshow(best_pred.reshape(28, 28))
+ax[1].imshow(random_sample.reshape((14,14)))
 # %%
 from IPython.display import display, clear_output
 
@@ -118,7 +121,11 @@ print("after: {:.4f}".format(np.linalg.norm(random_sample - k_means.cluster_cent
 
 
 best_pred = predict_model.predict(random_sample.reshape(1, 14,14,1), batch_size=1)
-plt.imshow(best_pred.reshape(28, 28))
+
+fig, ax = plt.subplots(nrows=2)
+
+ax[0].imshow(best_pred.reshape(28, 28))
+ax[1].imshow(random_sample.reshape((14,14)))
 
 # %%
 
