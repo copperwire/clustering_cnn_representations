@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from keras.datasets import mnist
 from keras.utils import to_categorical
 
@@ -18,7 +20,6 @@ import keras as ker
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 X_train = X_train.reshape(60000, 28, 28, 1)/255
@@ -111,16 +112,18 @@ vae = Model(in_layer, outputs, name='vae')
 
 
 def vae_loss(y_true, y_pred):
-    xent_loss = 784 * binary_crossentropy(K.flatten(y_true), K.flatten(y_pred))
+    xent_loss = binary_crossentropy(K.flatten(y_true), K.flatten(y_pred)) * 784
     kl_loss = - 0.5 * K.sum(1 + var - K.square(mean) - K.exp(var), axis=-1)
     vae_loss = K.mean(xent_loss + kl_loss)
     return vae_loss
 
 
-vae.compile(optimizer="adam", loss=vae_loss)
+vae.compile(optimizer="adam", loss=[vae_loss])
 
 repo = "/home/solli-comphys/github/clustering_cnn_representations/"
 plot_model(vae, show_shapes=True, to_file=repo+"images/vae.png")
+plot_model(encoder, show_shapes=True, to_file=repo+"images/encoder.png")
+plot_model(decoder, show_shapes=True, to_file=repo+"images/decoder.png")
 
 # %%
 
@@ -133,13 +136,19 @@ earlystop = ker.callbacks.EarlyStopping(
                             restore_best_weights=True
                               )
 
+tensorboard = ker.callbacks.TensorBoard(
+                            log_dir='./Graph',
+                            write_graph=True,
+                            histogram_freq=0,
+                            write_images=True)
+
 vae.fit(
         X_train,
         X_train,
         validation_data=(X_test, X_test),
         epochs=20,
         batch_size=1000,
-        callbacks=[earlystop,]
+        callbacks=[earlystop, tensorboard]
     )
 
 # %%
