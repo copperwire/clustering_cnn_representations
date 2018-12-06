@@ -147,7 +147,7 @@ vae.fit(
         X_train,
         validation_data=(X_test, X_test),
         epochs=20,
-        batch_size=1000,
+        batch_size=100,
         callbacks=[earlystop, tensorboard]
     )
 
